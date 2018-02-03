@@ -28,10 +28,10 @@ A burp python RESTFul API package.
     bi = burpscanner.BurpApi(host)
 
     # Add target in burp scope
-    response = bi.burp_scope()
+    response = bi.burp_scope('http://testwebsite.com')
 
     # Get the response message
-    print response.message()
+    print response.message
 
 </pre>
 

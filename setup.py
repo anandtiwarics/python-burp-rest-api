@@ -3,7 +3,7 @@
 import os
 import sys
 
-from burprestapi import __version__ as version
+from PyBurprestapi import __version__ as version
 
 try:
     from setuptools import setup
@@ -23,8 +23,8 @@ if sys.argv[-1] == 'install':
     sys.exit(0)
 
 setup(
-    name='burprestapi',
-    packages=['burprestapi'],
+    name='PyBurprestapi',
+    packages=['PyBurprestapi'],
     version=version,
     description='Python library enumerating the Burp RESTFul API endpoints.',
     long_description=readme,
@@ -35,7 +35,7 @@ setup(
     license='MIT License',
     zip_safe=True,
     install_requires=['requests'],
-    keywords=['burprestapi', 'api', 'security', 'software', 'burp'],
+    keywords=['PyBurprestapi', 'api', 'security', 'software', 'burp'],
     classifiers=[
         'Intended Audience :: Developers',
         'Natural Language :: English',

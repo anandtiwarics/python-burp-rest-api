@@ -10,7 +10,7 @@ A burp python RESTFul API package.
 
 ## Quick Start
 
-- Install with pip: ``pip install burprestapi``
+- Install with pip: ``pip install PyBurprestapi``
 - Build locally: ``python setup.py build``
 
 
@@ -19,7 +19,7 @@ A burp python RESTFul API package.
 <pre>
 
     # import the package
-    from burprestapi import burpscanner
+    from PyBurprestapi import burpscanner
 
     # setup burp connection
     host = 'http://localhost:8090'

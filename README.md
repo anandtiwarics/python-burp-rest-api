@@ -15,10 +15,8 @@ A burp python RESTFul API package.
 
 
 ## Example
-~~~~~~~
 
 <pre>
-
 
     # import the package
     from burprestapi import burpscanner

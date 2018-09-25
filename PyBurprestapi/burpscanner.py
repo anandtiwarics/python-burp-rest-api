@@ -7,12 +7,20 @@ __license__ = "MIT"
 
 import requests
 import json
-
+from . import __version__ as version
 
 class BurpApi(object):
-    def __init__(self, host, ):
+    def __init__(self, host, timeout=60, user_agent=None, client_version=version):
 
         self.host = host
+        self.timeout = timeout
+        self.client_version = client_version
+
+        if not user_agent:
+            self.user_agent = 'PyBurprestapi/' + version
+        else:
+            self.user_agent = user_agent
+
 
     def burp_scope(self, data):
         """

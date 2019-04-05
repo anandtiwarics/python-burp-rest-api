@@ -1,0 +1,15 @@
+language: python
+python:
+- '2.7'
+script:
+- python setup.py install
+notifications:
+  email: false
+deploy:
+  provider: pypi
+  user: archerysec
+  password:
+    secure: lNkAjAvtWr0af0odtLUD3JI/Hhlb4SUF4FLk7cM87ibj+Qqm/R14sO9m18BCGEqk+B1jasTFlFaxgI9ypOXI9WfktmVBhKudZwS7qGIPHZIyxEGzTurBaryfLUcE46G83jiuLfoDYsC509vrI72bPH7GTZH3NjMrMJK1MOY3jNJw0f9Oc/A4/yOhld63ObnO6y5imkpKpj2GYpEK0hTC0CpkxCm6igzL25+19JY9XzoCCWA01TZ4xP3QWSBEnJcpVRTp6jqvxmmyN0a//IK9YU7FSpTiNUhFckdVIDHFWzNYkwdiiqx7sa0OOaMvf9GD1t//tK7l8jEeIjFTo3bjgOkRC+Ooxs57gqCZ/EC6wq06waOOUBVOq3x+V4Ap8PWnnGnKsMlPVJv6uebfjRrjBp+55kCXA9TGAy55lsXp/LgxNjcf8Hbdq2XgG6a16v20jqhHDjdi9Ubgh2hdzsWtn32hIRKNBJRWJb7T2XPzoDd1xehI95nM4kQLXyJS1PM8LUFj/X7XJrjrZVPiT0HIBqLDx03J2Ty6IxLdBsNGzesAatFKeBLJlAZEGnhfXfrQzm5YTbUiwB8BAfkBK0XTxzQU/9KQRjlV38G8AsH7qEMFo9FlJAJyXtHT1XkmAIFlqKVBILrwCQjEJphXiFwe8prjerKi9+Lruz0ubD21MRE=
+  on:
+    distributions: sdist bdist_wheel
+    repo: anandtiwarics/python-burp-rest-api

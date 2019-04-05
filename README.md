@@ -5,7 +5,6 @@ A burp python RESTFul API package.
 
 ## Requirements
 
-* [burp-rest-api](https://github.com/vmware/burp-rest-api)
 * Burp Suite Professional
 
 ## Quick Start
@@ -22,16 +21,25 @@ A burp python RESTFul API package.
     from PyBurprestapi import burpscanner
 
     # setup burp connection
-    host = 'http://localhost:8090'
+    host = 'http://127.0.0.1:1337/'
+    
+    # Burp API key
+    key = '6dHyTmUB9t474JuvVAgpP7ofc2u4N2Mr'
 
+    # importing host and key
+    bi = burpscanner.BurpApi(host, key)
+    
     #
-    bi = burpscanner.BurpApi(host)
+    data = '{"urls":["http://zero.webappsecurity.com"]}'
 
-    # Add target in burp scope
-    response = bi.burp_scope('http://testwebsite.com')
+    # scan Launch
+    response = bi.scan(data)
 
     # Get the response message
     print response.message
+    
+    # Get response header (Scan ID found in Location)
+    print response.response_headers
 
 </pre>
 

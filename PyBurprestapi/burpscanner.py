@@ -9,10 +9,12 @@ import requests
 import json
 from . import __version__ as version
 
+
 class BurpApi(object):
-    def __init__(self, host, timeout=60, user_agent=None, client_version=version):
+    def __init__(self, host, key, timeout=60, user_agent=None, client_version=version):
 
         self.host = host
+        self.key = key
         self.timeout = timeout
         self.client_version = client_version
 
@@ -21,124 +23,34 @@ class BurpApi(object):
         else:
             self.user_agent = user_agent
 
+    '''
+    Burp Professional V2.0.x new API 
+    
+    '''
 
-    def burp_scope(self, data):
+    def issue_definitions(self):
         """
-        :return: Add scope in Burp.
-        """
-        return self._request('GET', '/burp/target/scope?url=%s' % data)
-
-    def burp_scope_add(self, url):
-        """
-        :param url:
-        :return: Add target to Scope
-        """
-        return self._request('PUT', '/burp/target/scope?url=%s' % url)
-
-    def burp_out_of_scope(self, url):
-        """
-        Excludes the specified Url from the Suite-wide scope.
-        :param url:
+        /knowledge_base/issue_definitions
         :return:
         """
-        return self._request('DELETE', '/burp/target/scope?url=%s' % url)
+        return self._request('GET', '/v0.1/knowledge_base/issue_definitions')
 
-    def burp_spider(self, data):
-        """
-        :param data:
-        :return: Add target to Spider
+    def scan(self, data):
         """
 
-        return self._request('POST', '/burp/spider?baseUrl=%s' % data)
-
-    def burp_configuration(self):
-        """
-
-        :param data:
-        :return: Get the configuration of Burp
-        """
-
-        return self._request('GET', '/burp/configuration')
-
-    def burp_configuration_add(self, data):
-        """
-
-        :param data: Example: {} #JSON format
-        :return: Add Burp Configuration
-        """
-        return self._request('PUT', '/burp/configuration', data=data)
-
-    def burp_proxy_history(self):
-        """
-
-        :return: Returns details of items in Burp Suite Proxy history.
-        """
-        return self._request('GET', '/burp/proxy/history')
-
-    def scan_report(self, url, reportType):
-        """
-
-        :param url: URL prefix in order to extract and include a specific subset of scan issues in the report.
-        :param reportType: Format to be used to generate report. Acceptable values are HTML and XML.
-        :return: Returns Scan report
-        """
-        return self._request('GET', '/burp/report?urlPrefix=' + url + '&reportType=' + reportType)
-
-    def burp_reset(self):
-        """
-        This will restore Burp state with an empty one.
-        :return: Clean Burp state
-        """
-        return self._request('GET', '/burp/reset')
-
-    def burp_issue(self, url):
-        """
-        Returns all of the current scan issues for URLs matching the specified urlPrefix. Performs a simple
-        case-sensitive text match, returning all scan issues whose URL begins with the given urlPrefix. Returns
-        all issues if urlPrefix is null.
-        :param url: URL prefix in order to extract a specific subset of scan issues.
-        :return: Get the current scan issues
-        """
-        return self._request('GET', '/burp/scanner/issues?urlPrefix=%s' % url)
-
-    def burp_active_scan(self, url):
-        """
-        Scans through Burp Sitemap and sends all HTTP requests with url starting with baseUrl to Burp Scanner
-        for active scan.
-        :param url: Base Url to submit for Active scan.
         :return:
         """
-        return self._request('POST', '/burp/scanner/scans/active?baseUrl=%s' % url)
 
-    def burp_active_delete(self, ):
+        return self._request('POST', '/v0.1/scan', data=data)
+
+    def scan_info(self, scan_id):
         """
-        Deletes the scan queue map from memory, not from Burp suite UI.
+
+        :param scan_id:
         :return:
         """
-        return self._request('DELETE', '/burp/scanner/scans/active')
 
-    def burp_scan_status(self, ):
-        """
-        Returns an aggregate of percentage completed for all the scan queue items.
-        :return:
-        """
-        return self._request('GET', '/burp/scanner/status')
-
-    def burp_stop(self):
-        """
-        This will exit Burp Suite. Use with caution: the API will not work after this endpoint has been called.
-        You have to restart Burp from command-line to re-enable te API.
-        :return:
-        """
-        return self._request('GET', '/burp/stop')
-
-    def burp_sitemap(self, url):
-        """
-        Returns details of items in the Burp suite Site map. urlPrefix parameter can be used to
-        specify a URL prefix, in order to extract a specific subset of the site map.
-        :return:
-        """
-        return self._request('GET', '/burp/target/sitemap?urlPrefix=%s' % url)
+        return self._request('GET', '/v0.1/scan/%s' % scan_id)
 
     def _request(self, method, url, params=None, headers=None, data=None):
         """Common handler for all the HTTP requests."""
@@ -153,7 +65,7 @@ class BurpApi(object):
             if method == 'POST' or method == 'PUT':
                 headers.update({'Content-Type': 'application/json'})
         try:
-            response = requests.request(method=method, url=self.host + url, params=params,
+            response = requests.request(method=method, url=self.host + self.key + url, params=params,
                                         headers=headers, data=data)
 
             try:
@@ -169,7 +81,10 @@ class BurpApi(object):
                 else:
                     data = ''
 
-                return BurpResponse(success=success, response_code=response_code, data=data)
+                response_headers = response.headers
+
+                return BurpResponse(success=success, response_code=response_code, data=data,
+                                    response_headers=response_headers)
             except ValueError as e:
                 return BurpResponse(success=False, message="JSON response could not be decoded {}.".format(e))
             except requests.exceptions.HTTPError as e:
@@ -186,11 +101,12 @@ class BurpApi(object):
 class BurpResponse(object):
     """Container for all Burp REST API response, even errors."""
 
-    def __init__(self, success, message='OK', response_code=-1, data=None):
+    def __init__(self, success, message='OK', response_code=-1, data=None, response_headers=None):
         self.message = message
         self.success = success
         self.response_code = response_code
         self.data = data
+        self.response_headers = response_headers
 
     def __str__(self):
         if self.data:

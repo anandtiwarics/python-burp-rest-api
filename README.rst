@@ -24,19 +24,28 @@ Example
 
 
     # import the package
-    from burprestapi import burpscanner
+    from PyBurprestapi import burpscanner
 
     # setup burp connection
-    host = 'http://localhost:8090'
+    host = 'http://127.0.0.1:1337/'
 
-    # initialize bi for request
-    bi = burpscanner.BurpApi(host)
+    # Burp API key
+    key = '6dHyTmUB9t474JuvVAgpP7ofc2u4N2Mr'
 
-    # Add target in burp scope
-    response = bi.burp_scope('http://testwebsite.com')
+    # importing host and key
+    bi = burpscanner.BurpApi(host, key)
+
+    #
+    data = '{"urls":["http://zero.webappsecurity.com"]}'
+
+    # scan Launch
+    response = bi.scan(data)
 
     # Get the response message
     print response.message
+
+    # Get response header (Scan ID found in Location)
+    print response.response_headers
 
 
 Bugs and Feature Requests
